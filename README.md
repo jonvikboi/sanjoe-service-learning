@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![SadanLearn School Campus](/public/images/school/building.jpg)
+![SadanLearn School Campus](/public/images/school/building.png)
 
 ### **Learn. Plan. Explore. Grow.**
 

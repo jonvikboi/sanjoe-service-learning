@@ -77,7 +77,7 @@ export function Hero() {
             <div className="relative mx-auto max-w-lg rounded-3xl p-3 bg-white border border-[#E6D9D4] shadow-[0_16px_40px_rgba(18,50,77,0.08)]">
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[#F8DDD9]">
                 <Image
-                  src="/images/school/building.jpg"
+                  src="/images/school/building.png"
                   alt="Sanjoe Sadan Convent School Building in Bengaluru"
                   fill
                   sizes="(max-width: 768px) 100vw, 500px"

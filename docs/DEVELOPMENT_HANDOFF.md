@@ -31,7 +31,7 @@ sanjoe-service-learning/
 ├── public/
 │   └── images/
 │       └── school/
-│           └── building.jpg        # Authentic Sanjoe Sadan School Building photograph
+│           └── building.png        # Authentic Sanjoe Sadan School Building photograph
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx              # Root Layout with Poppins & DM Serif Display Google Fonts
