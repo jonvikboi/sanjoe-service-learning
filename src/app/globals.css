@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-pink: #F4C7C3;
+  --color-pink-soft: #F8DDD9;
+  --color-pink-light: #FCEDEB;
+  
+  --color-terracotta: #C75A4B;
+  --color-terracotta-dark: #A9473A;
+  --color-terracotta-light: #E7A69B;
+  
+  --color-navy: #12324D;
+  --color-navy-dark: #0B1F30;
+  --color-navy-light: #1D4366;
+  --color-navy-subtle: #244C6E;
+  
+  --color-calm-blue: #2C5D7D;
+  --color-muted-blue: #6F91A6;
+  --color-sky-tint: #EBF2F7;
+  
+  --color-warm-cream: #FAF7F3;
+  --color-warm-cream-light: #FFFDF9;
+  --color-warm-cream-dark: #F0EAE1;
+  
+  --color-school-border: #E6D9D4;
+  --color-school-border-subtle: #EFE7E3;
+  
+  --color-dark-text: #1F2328;
+  --color-muted-text: #64748B;
+  
+  --color-semantic-success: #2E7D32;
+  --color-semantic-warning: #F59E0B;
+  --color-semantic-error: #C62828;
+  --color-semantic-info: #2C5D7D;
+
+  --font-sans: var(--font-poppins), system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-dm-serif), Georgia, serif;
+}
+
+:root {
+  --background: #FAF7F3;
+  --foreground: #1F2328;
+  --card: #FFFFFF;
+  --card-foreground: #1F2328;
+  --popover: #FFFFFF;
+  --popover-foreground: #1F2328;
+  --primary: #C75A4B;
+  --primary-foreground: #FFFFFF;
+  --secondary: #12324D;
+  --secondary-foreground: #FFFFFF;
+  --muted: #F8DDD9;
+  --muted-foreground: #64748B;
+  --accent: #F4C7C3;
+  --accent-foreground: #12324D;
+  --destructive: #C62828;
+  --destructive-foreground: #FFFFFF;
+  --border: #E6D9D4;
+  --input: #E6D9D4;
+  --ring: #C75A4B;
+  --radius: 0.75rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAF7F3;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E6D9D4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C75A4B;
+}
+
+/* Animation utilities */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
