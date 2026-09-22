@@ -17,7 +17,7 @@ export default function AdminStudentsPage() {
           "Class & Section reassignments across academic years",
           "Password reset & parent guardian linkage controls",
           "Student search by Roll Number, Name, or Grade",
-          "Prisma Enrollment model synchronization",
+          "MongoDB Enrollment model synchronization",
         ]}
       />
     </DashboardLayoutShell>

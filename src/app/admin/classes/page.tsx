@@ -17,7 +17,7 @@ export default function AdminClassesPage() {
           "Class Teacher designation assignment",
           "Academic year rollover management (2026–2027)",
           "Section capacity limits & active student rosters",
-          "Prisma Class model CRUD endpoints",
+          "MongoDB Class model CRUD endpoints",
         ]}
       />
     </DashboardLayoutShell>

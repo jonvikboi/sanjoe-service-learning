@@ -16,7 +16,7 @@ export default function AdminSubjectsPage() {
           "Curriculum subjects setup: Math, Science, English, Kannada, Hindi, Social",
           "Chapter and unit catalog mapping per grade level",
           "Subject color tokens and visual badge customization",
-          "Prisma Subject model configuration",
+          "MongoDB Subject model configuration",
           "Cross-subject resource linkage for Learning Hub",
         ]}
       />

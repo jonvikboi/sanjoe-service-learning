@@ -147,9 +147,7 @@ sanjoe-service-learning/
 ├── public/
 │   └── images/
 │       └── school/
-│           └── building.jpg        # Authentic Sanjoe Sadan campus photograph
-├── prisma/
-│   └── schema.prisma               # 18 relational models & enums
+│           └── building.png        # Authentic Sanjoe Sadan campus photograph
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx              # Root layout with Poppins & DM Serif Google Fonts

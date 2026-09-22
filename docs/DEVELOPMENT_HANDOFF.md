@@ -155,5 +155,5 @@ Typography is configured globally via Next.js Google Fonts:
 
 1. **Do not modify the color palette:** Inherit styles from `globals.css` or use standard design tokens (`#12324D`, `#C75A4B`, `#F4C7C3`, `#FAF7F3`).
 2. **Keep UI small and modular:** Place reusable cards in `src/components/dashboard/` or `src/components/cards/`.
-3. **No client-side DB secrets:** Perform all Prisma and external API queries in Server Actions or Route Handlers.
+3. **No client-side DB secrets:** Perform all MongoDB and external API queries in Server Actions or Route Handlers.
 4. **Use Zod for input validation:** Validate all form submissions and file uploads server-side.

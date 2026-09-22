@@ -1451,7 +1451,7 @@ Content management
 
 # 21. Database Schema
 
-Initial Prisma models:
+Initial MongoDB document collections / models:
 
 ``` text
 User
