@@ -15,7 +15,7 @@ export default function TeacherHomeworkPage() {
         features={[
           "Interactive homework authoring with Zod schema validation",
           "Due date and time selection with automated student alerts",
-          "Optional PDF exercise attachment via Supabase Storage",
+          "Optional PDF exercise attachment via Cloud / GridFS Storage",
           "Per-class assignment history & archiving",
           "Direct link to submission review table",
         ]}

@@ -12,8 +12,7 @@
 [![React 19](https://img.shields.io/badge/React-19.2-blue?style=flat-square&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
-[![Prisma ORM](https://img.shields.io/badge/Prisma-ORM_6-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
-[![Supabase](https://img.shields.io/badge/Supabase-Auth_%26_Storage-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas_%26_Mongoose-47A248?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
 
 </div>
 
@@ -88,9 +87,9 @@ Frontend:
 
 Backend & Data:
   ├── Next.js Server Actions & Route Handlers
-  ├── Prisma ORM 6 (PostgreSQL Client)
-  ├── Supabase PostgreSQL (Managed Relational DB)
-  ├── Supabase Auth & Supabase Storage
+  ├── MongoDB Native Client & Mongoose ODM
+  ├── MongoDB Atlas (Managed Cloud Document Database)
+  ├── Session-based / JWT Authentication
   └── Zod (Server-side schema validation)
 
 AI Architecture (Phase 5):
@@ -106,6 +105,7 @@ AI Architecture (Phase 5):
 
 - **Node.js:** `v20+` or `v24+`
 - **npm:** `v10+` or `v11+`
+- **MongoDB:** Local MongoDB daemon or MongoDB Atlas connection URI
 
 ### Installation
 
@@ -125,20 +125,14 @@ AI Architecture (Phase 5):
    ```bash
    cp .env.example .env.local
    ```
-   Configure your Supabase and PostgreSQL database credentials in `.env.local`:
+   Configure your MongoDB connection URI and secrets in `.env.local`:
    ```env
-   NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-   NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-public-key"
-   DATABASE_URL="postgresql://postgres:password@db.your-project.supabase.co:6543/postgres?pgbouncer=true"
-   DIRECT_URL="postgresql://postgres:password@db.your-project.supabase.co:5432/postgres"
+   # Local MongoDB or MongoDB Atlas
+   MONGODB_URI="mongodb+srv://<username>:<password>@cluster0.mongodb.net/sadanlearn?retryWrites=true&w=majority"
+   NEXTAUTH_SECRET="your-development-secret-token"
    ```
 
-4. **Generate Prisma Client:**
-   ```bash
-   npx prisma generate
-   ```
-
-5. **Start the Development Server:**
+4. **Start the Development Server:**
    ```bash
    npm run dev
    ```
@@ -173,8 +167,7 @@ sanjoe-service-learning/
 │   │   └── shared/                 # Container, SectionHeading, EmptyState, RoleSwitcherBanner
 │   ├── lib/
 │   │   ├── utils.ts                # Class merging & date formatting
-│   │   ├── prisma.ts               # Prisma singleton client
-│   │   ├── supabase/               # Supabase browser & server SSR helpers
+│   │   ├── mongodb.ts              # MongoDB native client & Mongoose connection singleton
 │   │   ├── ai/                     # AI provider interfaces & offline mock
 │   │   └── mock-data/              # Isolated mock data for development
 │   └── types/                      # Central TypeScript interfaces

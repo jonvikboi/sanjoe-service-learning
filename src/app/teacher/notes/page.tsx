@@ -15,8 +15,8 @@ export default function TeacherNotesPage() {
         features={[
           "Class & Subject target selector (e.g. Class 8A / Mathematics)",
           "PDF/DOCX validation (enforces 25MB max size limit)",
-          "Supabase Storage direct upload integration hook",
-          "PostgreSQL Note metadata indexing via Prisma",
+          "Cloud / GridFS direct upload integration hook",
+          "MongoDB Note metadata indexing & search",
           "Student download statistics & access logs",
         ]}
       />

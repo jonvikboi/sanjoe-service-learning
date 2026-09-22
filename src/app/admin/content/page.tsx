@@ -16,8 +16,8 @@ export default function AdminContentPage() {
           "Learning Hub article moderation & publishing",
           "Career Corner verified opportunity postings (NMMS, NTSE, Olympiads)",
           "Daily quote & discovery fact of the day scheduler",
-          "Direct PDF handbook attachments via Supabase Storage",
-          "Prisma EducationalContent & CareerOpportunity model synchronization",
+          "Direct PDF handbook attachments via Cloud / GridFS Storage",
+          "MongoDB EducationalContent & CareerOpportunity model synchronization",
         ]}
       />
     </DashboardLayoutShell>

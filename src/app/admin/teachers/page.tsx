@@ -13,11 +13,11 @@ export default function AdminTeachersPage() {
         icon={Users}
         backHref="/admin/dashboard"
         features={[
-          "Teacher onboarding & role assignment (TEACHER role in Supabase Auth)",
+          "Teacher onboarding & role assignment (TEACHER role in MongoDB Users)",
           "Subject-to-Class allocation matrix (e.g. Mrs. Reena Thomas → Class 8A Math)",
           "Department head designations & permission overrides",
           "Teacher workload & assignment activity logs",
-          "Prisma TeacherAssignment model mapping",
+          "MongoDB TeacherAssignment document model mapping",
         ]}
       />
     </DashboardLayoutShell>

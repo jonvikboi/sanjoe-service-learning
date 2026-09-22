@@ -90,7 +90,7 @@ export function ModulePlaceholder({
           <div className="flex items-center gap-2 text-xs text-[#64748B]">
             <Construction className="h-4 w-4 text-[#C75A4B]" />
             <span>
-              Route structure and visual shell established. Real Supabase & Prisma integration hook ready.
+              Route structure and visual shell established. Real MongoDB integration hook ready.
             </span>
           </div>
           <Link href={backHref}>

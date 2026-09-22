@@ -1,7 +1,7 @@
 # SadanLearn — Foundation & Developer Handoff Document
 
 > **Platform:** SadanLearn — Sanjoe Sadan Convent School LMS  
-> **Repository Base:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Prisma, Supabase  
+> **Repository Base:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, MongoDB (Mongoose & Native Driver)  
 > **Status:** Phase 2 Foundation Complete — Ready for Feature Team Members
 
 ---
@@ -19,7 +19,7 @@ The initial foundation establishes:
    - **Teacher Dashboard:** `/teacher/dashboard`
    - **Admin Dashboard:** `/admin/dashboard`
 5. **Route Placeholders:** Complete set of 19 role-specific route pages for team feature development.
-6. **Backend / Data Readiness:** Prisma relational schema with 18 models, Supabase client/server helpers, and mock data repository.
+6. **Backend / Data Readiness:** MongoDB singleton connection utility (`src/lib/mongodb.ts`), document schema blueprints, and mock data repository.
 7. **AI Foundation:** Provider abstractions in `src/lib/ai/` and `docs/AI_SETUP.md`.
 
 ---
@@ -70,13 +70,10 @@ sanjoe-service-learning/
 │   │   └── shared/                 # Container, SectionHeading, EmptyState, LoadingState, RoleSwitcherBanner
 │   ├── lib/
 │   │   ├── utils.ts                # Class merge utility (cn) & date formatting
-│   │   ├── prisma.ts               # Prisma singleton client
-│   │   ├── supabase/               # Supabase browser & server clients
+│   │   ├── mongodb.ts              # MongoDB native & Mongoose singleton connection
 │   │   ├── ai/                     # AI provider contract & mock implementation
 │   │   └── mock-data/              # Isolated mock data for students, teachers, admin, school info
 │   └── types/                      # Central TypeScript interfaces & enums
-├── prisma/
-│   └── schema.prisma               # Complete PostgreSQL relational schema
 ├── docs/
 │   ├── AI_SETUP.md                 # AI integration guide for Phase 5
 │   └── DEVELOPMENT_HANDOFF.md      # This handoff documentation
@@ -96,6 +93,7 @@ sanjoe-service-learning/
    ```bash
    cp .env.example .env.local
    ```
+   Set `MONGODB_URI` to your local MongoDB instance or MongoDB Atlas cluster.
 
 3. **Start the development server:**
    ```bash
@@ -133,19 +131,19 @@ Typography is configured globally via Next.js Google Fonts:
 
 ### 1. Authentication & Role-Based Routing (`/login`, middleware)
 - **Current State:** `/login` contains quick demo buttons to instantly test Student, Teacher, and Admin dashboards without requiring database credentials.
-- **Integration Task:** Connect `@supabase/ssr` login action in `src/app/login/page.tsx` with Supabase Auth, verify user role from `User` table, and redirect to `/${role.toLowerCase()}/dashboard`.
+- **Integration Task:** Connect authentication action in `src/app/login/page.tsx` against MongoDB `users` collection (using bcrypt password comparison and JWT / session cookie), verify user role, and redirect to `/${role.toLowerCase()}/dashboard`.
 
 ### 2. Notes Module (`/student/notes`, `/teacher/notes`)
 - **Current State:** UI shells, mock card previews, and `RecentNoteCard` components exist.
-- **Integration Task:** Create Server Action `uploadNoteAction()` using `src/lib/supabase/server.ts` to upload PDFs to Supabase Storage bucket `notes` and insert metadata via `prisma.note.create()`.
+- **Integration Task:** Create Server Action `uploadNoteAction()` using MongoDB GridFS or cloud storage (e.g., Cloudinary/S3) and insert metadata document into MongoDB `notes` collection.
 
 ### 3. Homework & Submissions (`/student/homework`, `/teacher/homework`, `/teacher/submissions`)
 - **Current State:** Homework cards, submission progress bars, and teacher review queues styled with mock data.
-- **Integration Task:** Wire up `prisma.homework` and `prisma.submission` queries to display real classroom assignments and student upload receipts.
+- **Integration Task:** Query and mutate MongoDB `homework` and `submissions` collections to display real classroom assignments and student upload receipts.
 
 ### 4. Study Planner (`/student/planner`)
 - **Current State:** Feature placeholder shell ready.
-- **Integration Task:** Implement deterministic scheduling algorithm using student's exam date and subject weights, saving tasks to `prisma.studyTask`.
+- **Integration Task:** Implement deterministic scheduling algorithm using student's exam date and subject weights, saving tasks to MongoDB `studyTasks` collection.
 
 ### 5. AI Features (Math Solver & Language Lab)
 - **Current State:** Architecture defined in `src/lib/ai/provider.ts` and `src/lib/ai/mock.ts`. See `docs/AI_SETUP.md`.

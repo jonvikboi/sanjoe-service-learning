@@ -184,13 +184,12 @@ Do NOT create a separate Express backend for V1.
 
 ## Database / Backend Services
 
--   **Supabase**
--   **PostgreSQL**
--   **Supabase Auth**
--   **Supabase Storage**
--   **Prisma ORM**
+-   **MongoDB** (MongoDB Atlas / Local MongoDB)
+-   **Mongoose ODM & MongoDB Native Driver**
+-   **Session / JWT Authentication** (via NextAuth.js or secure HTTP-only cookies)
+-   **Cloud / GridFS File Storage** (Cloudinary / AWS S3 / UploadThing or MongoDB GridFS)
 
-Supabase should provide the initial managed backend infrastructure.
+MongoDB provides the document database infrastructure, utilizing MongoDB Atlas for managed cloud hosting and Mongoose for type-safe schema modeling.
 
 ## AI
 
@@ -217,55 +216,51 @@ Do not make the entire LMS AI-dependent.
 ## Deployment
 
 -   Vercel
--   Supabase
+-   MongoDB Atlas
 -   GitHub
 
 ------------------------------------------------------------------------
 
-# 6. MongoDB Decision
+# 6. Database Decision: MongoDB Architecture
 
-## Decision: Use PostgreSQL, not MongoDB
+## Decision: Use MongoDB
 
-MongoDB is technically suitable for a small application and can be used
-if the team already has strong MongoDB experience.
+MongoDB is chosen as the core primary database for SadanLearn. It provides a flexible, developer-friendly document model that maps naturally to Next.js TypeScript objects, eliminates SQL migration overhead, and enables embedding structured academic records.
 
-However, this LMS is highly relational:
+### Document Model Strategy: Embedding vs. Referencing
 
-``` text
-Student
-  ↓
-Enrollment
-  ↓
-Class
-  ↓
-Subject
-  ↓
-Teacher
-```
+In MongoDB, we balance **embedding** for read performance and **referencing (ObjectIds)** for shared relationships:
 
-and:
+1. **Referencing (Normalized Collections):**
+   - `users`: Central collection for Students, Teachers, and Admins (`_id`, `name`, `email`, `role`, `passwordHash`, `grade`, `section`).
+   - `classes`: School sections (`_id`, `grade`, `section`, `classTeacherId`, `academicYear`).
+   - `subjects`: School subjects (`_id`, `name`, `code`, `grade`).
+   - `homework`: Homework assignments authored by teachers (`_id`, `classId`, `subjectId`, `teacherId`, `title`, `description`, `dueDate`, `attachmentUrl`).
+
+2. **Embedding (Denormalized Sub-documents):**
+   - **Submissions within or linked to Homework:** Student homework submissions (`studentId`, `submittedAt`, `fileUrl`, `remarks`, `grade`).
+   - **Daily Study Tasks:** Embedded inside `studyPlans` per student (`date`, `tasks: [{ subject, duration, topic, completed }]`).
+   - **Chapter hierarchy in Notes:** Chapters and topics embedded within subject documents or indexed with compound keys.
 
 ``` text
-Teacher
-  ↓
+User (Student / Teacher / Admin)
+  ├── Profile & Role Metadata
+  └── Enrolled Classes [ObjectId ref]
+
 Homework
-  ↓
-Submission
-  ↓
-Student
+  ├── ClassId [ObjectId ref]
+  ├── SubjectId [ObjectId ref]
+  └── Submissions: [ { studentId, fileUrl, status, marks } ]
 ```
-
-PostgreSQL is therefore a better fit.
 
 ### Use:
 
-**Supabase PostgreSQL + Prisma**
+**MongoDB (Atlas) + Mongoose / Native MongoClient**
 
-### Do not use:
-
-MongoDB + Express + separate authentication + separate file storage.
-
-That architecture adds unnecessary infrastructure.
+### Architecture Principles:
+- Use Next.js Server Actions and Route Handlers for direct database interaction via a pooled singleton connection (`src/lib/mongodb.ts`).
+- Validate incoming documents with **Zod** before passing to Mongoose / MongoDB.
+- Avoid spinning up a separate Express server; keep everything within Next.js App Router for zero-latency, unified deployment.
 
 ------------------------------------------------------------------------
 
@@ -292,13 +287,14 @@ That architecture adds unnecessary infrastructure.
         Server Actions  API Routes   AI Layer
              │            │            │
              └────────────┼────────────┘
+                          │
                           ▼
                  ┌──────────────────┐
-                 │     Supabase     │
+                 │  MongoDB Atlas   │
                  ├──────────────────┤
-                 │ PostgreSQL       │
-                 │ Authentication   │
-                 │ Storage          │
+                 │ Document DB      │
+                 │ Users & Profiles │
+                 │ Academic Records │
                  └──────────────────┘
                           │
                           ▼
@@ -1530,22 +1526,24 @@ StudyPlan
 
 # 23. Authentication
 
-Use Supabase Auth.
+Use MongoDB User Collection with Secure Session / JWT Cookies (or NextAuth.js).
 
 Required flow:
 
 ``` text
-Login
+Login Form (Email / RegNo + Password)
  ↓
-Supabase authentication
+Validate credentials server-side with Zod
  ↓
-Get authenticated user ID
+Query User document in MongoDB `users` collection
  ↓
-Load application profile
+Compare password hash with bcrypt / Argon2
  ↓
-Determine role
+Generate secure HTTP-only signed session token / cookie
  ↓
-Redirect
+Load user profile (Role: STUDENT | TEACHER | ADMIN)
+ ↓
+Redirect to role dashboard
 ```
 
 Role routes:
@@ -1625,9 +1623,9 @@ Attach PDF/document
  ↓
 Validate file
  ↓
-Upload to Supabase Storage
+Upload to Cloud Storage / MongoDB GridFS
  ↓
-Save metadata in PostgreSQL
+Save metadata in MongoDB `notes` collection
 ```
 
 Student flow:
@@ -1827,7 +1825,7 @@ Technology
 Study Tips
 ```
 
-Content should be stored in PostgreSQL.
+Content should be stored in MongoDB (`educationalContent` collection).
 
 Model:
 
@@ -1917,9 +1915,9 @@ All AI calls must happen server-side.
 
 # 33. File Storage
 
-Use Supabase Storage buckets.
+Use MongoDB GridFS or Cloud Storage (e.g., Cloudinary / AWS S3 / UploadThing).
 
-Recommended:
+Recommended buckets / namespaces:
 
 ``` text
 notes
@@ -2303,8 +2301,7 @@ Import alias: @/*
 Then install:
 
 ``` bash
-npm install @supabase/supabase-js @supabase/ssr
-npm install prisma @prisma/client
+npm install mongodb mongoose
 npm install zod react-hook-form @hookform/resolvers
 npm install lucide-react
 npm install date-fns
@@ -2323,10 +2320,10 @@ hard-coding an outdated command.
 Use:
 
 ``` text
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-DATABASE_URL=
-DIRECT_URL=
+MONGODB_URI=
+NEXTAUTH_SECRET=
+JWT_SECRET=
+UPLOAD_STORAGE_BUCKET=
 AI_API_KEY=
 ```
 
@@ -2400,9 +2397,8 @@ Create:
 Build:
 
 -   Next.js
--   Supabase
--   Prisma
--   Auth
+-   MongoDB (Atlas / Mongoose)
+-   Auth & Session Cookies
 -   RBAC
 -   Design system
 -   Deployment
@@ -2575,10 +2571,10 @@ Antigravity must follow these rules:
 7.  Validate all external input with Zod.
 8.  Never expose secrets to the browser.
 9.  Never trust client-side roles.
-10. Keep database access centralized.
-11. Use Prisma for application database access.
-12. Use Supabase Storage for files.
-13. Do not store files directly in PostgreSQL.
+10. Keep database access centralized in `src/lib/mongodb.ts`.
+11. Use Mongoose schemas or MongoDB collections for application database access.
+12. Use MongoDB GridFS or Cloud Storage (e.g. Cloudinary/S3) for file attachments.
+13. Store file references/URLs in document metadata rather than embedding large binary blobs.
 14. Do not introduce unnecessary libraries.
 15. Do not create an Express backend.
 16. Do not create microservices.
@@ -2775,14 +2771,13 @@ Next.js Route Handlers
 Zod
 
 Database:
-Supabase PostgreSQL
-Prisma
+MongoDB (Atlas / Mongoose / Native Driver)
 
 Authentication:
-Supabase Auth
+MongoDB Users + Secure Session / JWT Cookies (or NextAuth.js)
 
 Storage:
-Supabase Storage
+MongoDB GridFS / Cloud Storage (Cloudinary / S3)
 
 AI:
 Gemini or OpenAI
@@ -3080,8 +3075,8 @@ First create:
 1. Next.js application
 2. Design system
 3. Public landing page
-4. Supabase connection
-5. Prisma schema
+4. MongoDB connection (`src/lib/mongodb.ts`)
+5. MongoDB collections & Mongoose schemas
 6. Authentication
 7. RBAC
 8. Student dashboard shell
@@ -3094,7 +3089,7 @@ Then implement the core LMS modules one at a time.
 The first milestone should be:
 
 > **A polished public school website + working authentication +
-> role-specific empty dashboards + connected Supabase database.**
+> role-specific empty dashboards + connected MongoDB database.**
 
 Only after that milestone is stable should Notes and Homework be
 implemented.
