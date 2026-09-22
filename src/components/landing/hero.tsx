@@ -8,9 +8,7 @@ import { Badge } from "@/components/ui/badge";
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-[#FAF7F3] pt-8 pb-16 lg:pt-14 lg:pb-24 border-b border-[#E6D9D4]">
-      {/* Subtle architectural background accents */}
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 h-96 w-96 rounded-full bg-[#F4C7C3]/30 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-10 h-72 w-72 rounded-full bg-[#EBF2F7] blur-2xl pointer-events-none" />
+
 
       <Container size="lg">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">

@@ -6,9 +6,7 @@ import { Button } from "@/components/ui/button";
 export function CtaSection() {
   return (
     <section className="py-20 lg:py-24 bg-gradient-to-br from-[#C75A4B] via-[#B84E40] to-[#A9473A] text-white relative overflow-hidden">
-      {/* Decorative patterns */}
-      <div className="absolute top-0 right-0 -mr-16 -mt-16 h-80 w-80 rounded-full bg-white/10 blur-2xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -ml-16 -mb-16 h-80 w-80 rounded-full bg-[#12324D]/30 blur-2xl pointer-events-none" />
+
 
       <Container size="md" className="relative z-10 text-center">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-xs font-semibold text-white mb-6 backdrop-blur-xs border border-white/20">
