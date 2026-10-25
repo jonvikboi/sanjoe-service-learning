@@ -69,10 +69,14 @@ sanjoe-service-learning/
 │   │   ├── navigation/             # PublicNavbar, LmsSidebar, LmsTopbar
 │   │   └── shared/                 # Container, SectionHeading, EmptyState, LoadingState, RoleSwitcherBanner
 │   ├── lib/
-│   │   ├── utils.ts                # Class merge utility (cn) & date formatting
-│   │   ├── mongodb.ts              # MongoDB native & Mongoose singleton connection
-│   │   ├── ai/                     # AI provider contract & mock implementation
-│   │   └── mock-data/              # Isolated mock data for students, teachers, admin, school info
+│   │   ├── auth/                   # JWT session creation, verification & cookies
+│   │   ├── db/                     # MongoDB connection, collections & indexes
+│   │   ├── permissions/            # RBAC guards (requireAuth, requireStudent, etc.)
+│   │   ├── validators/             # Zod input validation schemas
+│   │   ├── ai/                     # AI provider abstraction & offline mock
+│   │   ├── mock-data/              # Isolated mock data for students, teachers, admin
+│   │   └── utils.ts                # Class merge utility (cn) & date formatting
+│   ├── middleware.ts               # Edge route protection & RBAC redirection
 │   └── types/                      # Central TypeScript interfaces & enums
 ├── docs/
 │   ├── AI_SETUP.md                 # AI integration guide for Phase 5
