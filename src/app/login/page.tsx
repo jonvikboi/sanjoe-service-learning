@@ -18,29 +18,48 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { RoleSwitcherBanner } from "@/components/shared/role-switcher-banner";
 
+import { loginWithCredentials, quickDemoLogin } from "./actions";
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [selectedRole] = useState<"STUDENT" | "TEACHER" | "ADMIN">("STUDENT");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleDemoLogin = (role: "STUDENT" | "TEACHER" | "ADMIN") => {
+  const handleDemoLogin = async (role: "STUDENT" | "TEACHER" | "ADMIN") => {
     setIsLoading(true);
-    if (role === "STUDENT") {
-      router.push("/student/dashboard");
-    } else if (role === "TEACHER") {
-      router.push("/teacher/dashboard");
-    } else {
-      router.push("/admin/dashboard");
+    setErrorMessage(null);
+    try {
+      const res = await quickDemoLogin(role);
+      if (res.success && res.redirectUrl) {
+        router.push(res.redirectUrl);
+      }
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : "Failed to sign in");
+      setIsLoading(false);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // In dev / initial foundation mode, route based on selected demo role
-    handleDemoLogin(selectedRole);
+    setErrorMessage(null);
+
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+
+    const res = await loginWithCredentials(null, formData);
+    if (!res.success) {
+      setErrorMessage(res.error || "Invalid credentials. Please check your details.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (res.redirectUrl) {
+      router.push(res.redirectUrl);
+    }
   };
 
   return (
@@ -120,6 +139,12 @@ export default function LoginPage() {
                 </button>
               </div>
             </div>
+
+            {errorMessage && (
+              <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium">
+                {errorMessage}
+              </div>
+            )}
 
             {/* Standard Credentials Form */}
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
